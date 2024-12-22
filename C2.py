@@ -33,3 +33,16 @@ sorted_sum_yards = sorted(sum_yards.items(), key=lambda x: x[1], reverse=True)
 for player, yards in sorted_sum_yards:
     if player != "Tom Brady":
         print(player, yards)
+
+"""plot the players by their number of passing yards only for players with more 
+than 4000 passing yards"""
+import matplotlib.pyplot as plt
+
+players = [player for player, yards in sum_yards.items() if yards > 4000]
+yards = [yards for player, yards in sum_yards.items() if yards > 4000]
+
+plt.bar(players, yards)
+plt.xlabel('Players')
+plt.ylabel('Yards')
+plt.title('Players by Passing Yards')
+plt.show()
