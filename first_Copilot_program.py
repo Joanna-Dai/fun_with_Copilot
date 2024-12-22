@@ -17,7 +17,3 @@ with open('nfl_offensive_stats.csv') as csvfile:
         if row[3] == "Aaron Rodgers":
             sum_yards += int(row[7])
     print(sum_yards)
-
-
-
-
