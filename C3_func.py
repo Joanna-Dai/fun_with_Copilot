@@ -106,3 +106,25 @@ def num_points(word):
     return points
   
 points = num_points("zap")
+print(points)
+
+
+def best_word(word_list):
+    """
+    word_list a list of words
+    return the word with the most points
+    """
+    best_word = ""
+    best_points = 0
+    for word in word_list:
+        points = num_points(word)
+        if points > best_points:
+            best_word = word
+            best_points = points
+    return best_word
+
+# call best_word function with 'zap', 'pack', 'quack'
+# store the result in a variable called best
+# then print the result
+best = best_word(['zap', 'pack', 'quack'])
+print(best)
