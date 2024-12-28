@@ -29,6 +29,7 @@ def tot_pass_yds_player(input_file, player):
     
     return total
 
-if __name__ == '__main__':
-    import doctest
-    doctest.testmod()
+
+# perform the tests
+import doctest
+doctest.testmod(verbose=True)
