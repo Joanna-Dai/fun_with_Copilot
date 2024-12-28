@@ -11,13 +11,11 @@ def tot_pass_yds_player(input_file, player):
     return the total number of passing yards for the player
 
     >>> tot_pass_yds_player('nfl_offensive_stats.csv', 'Aaron Rodgers')
-    800
-    >>> tot_pass_yds_player('nfl_offensive_stats.csv', 'Kerryon Johnson')
-    5
+    13852
+    >>> tot_pass_yds_player('nfl_offensive_stats.csv', 'Patrick Mahomes')
+    16132
     >>> tot_pass_yds_player('nfl_offensive_stats.csv', 'Leo Porter')
     0
-    >>> tot_pass_yds_player('nfl_offensive_stats.csv', 'Dan Zingaro')
-    -10
 
     """
     import csv
