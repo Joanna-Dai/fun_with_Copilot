@@ -121,7 +121,7 @@ def split_string(text, separators):
 
     >>> split_string('one*two[three', '*[')
     ['one', 'two', 'three']
-    >>> split_string('A pearl! Pearl! Lustrous pearl! Rare. What a nice find.')
+    >>> split_string('A pearl! Pearl! Lustrous pearl! Rare. What a nice find.','.!?')
     ['A pearl', 'Pearl', 'Lustrous pearl', 'Rare', 'What a nice find']
 
     '''
@@ -129,14 +129,14 @@ def split_string(text, separators):
     word = ''
     for char in text:
         if char in separators:
-            word = word.strip()
+            word = word.strip(string.punctuation).strip()
             if word != '':
                 words.append(word)
             word = ''
         else:
             word += char
     
-    word = word.strip()
+    word = word.strip(string.punctuation).strip()
     if word != '':
         words.append(word)
     
@@ -152,7 +152,7 @@ def get_sentence(text):
     sentences are seperated by '.', '!', or '?'.
 
     >>> get_sentence('A pearl! Pearl! Lustrous pearl! Rare. What a nice find.')
-    ['A pearl', ' Pearl', ' Lustrous pearl', ' Rare', ' What a nice find']
+    ['A pearl', 'Pearl', 'Lustrous pearl', 'Rare', 'What a nice find']
 
     """
     return split_string(text, '.!?')
@@ -193,7 +193,7 @@ def get_phrases(sentence):
     phrases are seperated by ',' or ';' or ':'.
 
     >>> get_phrases('A pearl, Pearl; Lustrous pearl: Rare.')
-    ['A pearl', ' Pearl', ' Lustrous pearl', ' Rare']
+    ['A pearl', 'Pearl', 'Lustrous pearl', 'Rare']
 
     """
     return split_string(sentence, ',;:')
@@ -263,3 +263,84 @@ def get_all_signature(known_dir):
             signatures[file] = make_signature(text)
     
     return signatures
+
+
+
+def get_score(signature1, signature2, weights):
+    """
+    signature1 and signature2 are signatures.
+    weights is a list of five weights.
+
+    return the score for signature1 and signature2.
+
+    >>> get_score([4.6, 0.1, 0.05, 10, 2], \
+                  [4.3, 0.1, 0.04, 16, 4], \
+                  [11, 33, 50, 0.4, 4])
+    14.2
+
+    """
+    score = 0
+    for i in range(len(signature1)):
+        score += abs(signature1[i] - signature2[i]) * weights[i]
+    return score
+
+
+
+def lowest_score(signature_dict, unknown_signature, weights):
+    """
+    signature_dict is a dictionary mapping keys to signatures.
+    unknown_signature is a signature.
+    weights is a list of five weights.
+    return the key whose sigature value has th lowest score with unknown_signature.
+
+    >>> d = {'Dan': [1, 1, 1, 1, 1], 'Leo': [3, 3, 3, 3, 3]}
+    >>> unknown = [1, 0.8, 0.9, 1.3, 1.4]
+    >>> weights = [11, 33, 50, 0.4, 4]
+    >>> lowest_score(d, unknown, weights)
+    'Dan'
+
+    """
+    lowest = None
+    for key in signature_dict:
+        score = get_score(signature_dict[key], unknown_signature, weights)
+        if score < lowest:
+            lowest = score
+            name = key
+    return name
+
+
+
+def process_data(mystery_filename, known_dir):
+    """
+    mystery_filename is filename of a mystery book whose author we want to know.
+    known_dir is the name of a directory of books with known authors.
+
+    return the name of the signature closest to the signature of mystery_filename.
+    """
+    weights = [11, 33, 50, 0.4, 4]
+    with open(mystery_filename, 'r') as f:
+        text = f.read()
+        unknown_signature = make_signature(text)
+        signature_dict = get_all_signature(known_dir)
+    
+    return lowest_score(signature_dict, unknown_signature, weights)
+    
+
+
+def make_guess(known_dir):
+    """
+    ask user for a filename.
+    get all known signatures from known_dir
+    and print the name of the one that has lowest score 
+    with the user's filename 
+    """
+    mystery_filename = input('Enter the filename of the mystery book: ')
+    print(process_data(mystery_filename, known_dir))
+    
+
+# execute
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+    make_guess('C:/Joanna/AI/fun_with_Copilot/book')
+
