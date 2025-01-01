@@ -258,7 +258,7 @@ def get_all_signature(known_dir):
     import os
     signatures = {}
     for file in os.listdir(known_dir):
-        with open(known_dir + '/' + file, 'r') as f:
+        with open(known_dir + '/' + file, 'r', encoding='utf-8') as f:
             text = f.read()
             signatures[file] = make_signature(text)
     
@@ -300,7 +300,7 @@ def lowest_score(signature_dict, unknown_signature, weights):
     'Dan'
 
     """
-    lowest = None
+    lowest = float('inf')
     for key in signature_dict:
         score = get_score(signature_dict[key], unknown_signature, weights)
         if score < lowest:
@@ -318,7 +318,7 @@ def process_data(mystery_filename, known_dir):
     return the name of the signature closest to the signature of mystery_filename.
     """
     weights = [11, 33, 50, 0.4, 4]
-    with open(mystery_filename, 'r') as f:
+    with open(mystery_filename, 'r', encoding='utf-8') as f:
         text = f.read()
         unknown_signature = make_signature(text)
         signature_dict = get_all_signature(known_dir)
@@ -335,7 +335,9 @@ def make_guess(known_dir):
     with the user's filename 
     """
     mystery_filename = input('Enter the filename of the mystery book: ')
-    print(process_data(mystery_filename, known_dir))
+    result = process_data(mystery_filename, known_dir)
+    if result is not None:
+        print(result)
     
 
 # execute
@@ -344,3 +346,6 @@ if __name__ == '__main__':
     doctest.testmod()
     make_guess('C:/Joanna/AI/fun_with_Copilot/book')
 
+    # enter the filename of mystery book:
+    # C:/Joanna/AI/fun_with_Copilot/mystery/mystery.txt
+    # result: Jane Austen.txt
